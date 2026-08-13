@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Pantry & Recipe Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+<style>
+  :root {
+    --primary: #1b4332;
+    --primary-light: #2d6a4f;
+    --accent: #40916c;
+    --accent-gold: #d4a373;
+    --bg-main: #f8f9fa;
+    --panel-bg: #ffffff;
+    --border: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* --- App Layout --- */
+  #sidebar {
+    width: 360px;
+    background: var(--panel-bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  #main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--bg-main);
+  }
+
+  /* --- Sidebar Header & Panels --- */
+  .sidebar-header {
+    background: var(--primary);
+    color: #fff;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sidebar-header h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-header .icon {
+    font-size: 1.75rem;
+    color: var(--accent-gold);
+  }
+
+  .sidebar-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .panel-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .panel-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* --- Quick Actions --- */
+  .quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    color: var(--text-main);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.15s ease;
+  }
+
+  .action-btn:hover {
+    background: var(--primary-light);
+    color: #fff;
+    border-color: var(--primary-light);
+  }
+
+  .action-btn .symbol {
+    font-size: 1.15rem;
+  }
+
+  /* --- Meal Plan Table --- */
+  .meal-day {
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 0;
+  }
+  .meal-day:last-child { border-bottom: none; }
+  .day-name {
+    font-weight: 700;
+    font-size: 0.825rem;
+    color: var(--primary);
+    text-transform: uppercase;
+  }
+  .meal-item {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    margin-top: 0.2rem;
+  }
+
+  /* --- Shopping List Items --- */
+  .shopping-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .shopping-item {
+    font-size: 0.85rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .shopping-item:last-child { border-bottom: none; }
+
+  /* --- Main Chat Header --- */
+  header.chat-header {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chat-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--primary);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+  }
+
+  .status-badge .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2e7d32;
+  }
+
+  /* --- Chat Area --- */
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .msg { margin: 0; display: flex; flex-direction: column; }
+  .msg.user { align-items: flex-end; }
+  .msg.agent { align-items: flex-start; }
+
+  .bubble {
+    display: inline-block;
+    padding: 0.85rem 1.15rem;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--border);
+    text-align: left;
+    max-width: 85%;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .msg.user .bubble {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-bottom-right-radius: 2px;
+  }
+
+  .msg.agent .bubble {
+    border-bottom-left-radius: 2px;
+  }
+
+  .bubble.rich {
+    background: transparent;
+    border: none;
+    padding: 0;
+    max-width: 100%;
+    white-space: normal;
+    box-shadow: none;
+  }
+
+  /* --- Input Bar --- */
+  form#form {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: #fff;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  input#input {
+    flex: 1;
+    padding: 0.85rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input#input:focus {
+    border-color: var(--accent);
+  }
+
+  button.send-btn {
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  button.send-btn:hover {
+    background: var(--primary-light);
+  }
+
+  /* --- A2UI Card Components --- */
+  .a2card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-md);
+    max-width: 100%;
+  }
+  .a2card + .a2card, .a2col > .a2card { margin-top: 0.75rem; }
+  .a2col { display: flex; flex-direction: column; gap: 0.5rem; }
+  .a2row { display: flex; flex-direction: row; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .a2row.between { justify-content: space-between; }
+  .a2text { margin: 0; line-height: 1.45; }
+  .a2text.a2-h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+  .a2text.a2-h2 { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+  .a2text.a2-h3 { font-size: 1.1rem; font-weight: 600; color: var(--primary); }
+  .a2text.a2-h4 { font-size: 1rem; font-weight: 600; }
+  .a2text.a2-caption { font-size: 0.85rem; color: var(--text-muted); }
+  .a2divider { border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; width: 100%; }
+  .a2img { max-width: 100%; border-radius: 10px; display: block; margin-top: 0.5rem; }
+  .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-size: 1.25rem; line-height: 1; vertical-align: middle; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- Sidebar for Goals, Quick Actions, & Weekly Meal Plan Memory -->
+<div id="sidebar">
+  <div class="sidebar-header">
+    <span class="material-symbols-outlined icon">skillet</span>
+    <h1>Smart Pantry Concierge</h1>
+  </div>
+
+  <div class="sidebar-scroll">
+    <!-- Quick Actions Panel -->
+    <div class="panel-card">
+      <div class="panel-title">
+        <span class="material-symbols-outlined">bolt</span> Quick Actions
+      </div>
+      <div class="quick-actions">
+        <button class="action-btn" onclick="sendPrompt('Create a 7-day meal plan for next week based on my Firestore pantry inventory and stored dietary restrictions.')">
+          <span class="material-symbols-outlined symbol">calendar_month</span>
+          Plan Upcoming Week
+        </button>
+        <button class="action-btn" onclick="sendPrompt('Suggest 3 recipes using my available pantry stock and 1814 Domestic Cookery historic principles.')">
+          <span class="material-symbols-outlined symbol">menu_book</span>
+          Suggest Historic Recipes
+        </button>
+        <button class="action-btn" onclick="sendPrompt('Compare required ingredients for next week\'s meals against my Firestore pantry stock and generate a missing item shopping list.')">
+          <span class="material-symbols-outlined symbol">shopping_cart</span>
+          Generate Shopping List
+        </button>
+        <button class="action-btn" onclick="sendPrompt('Generate a mouth-watering photograph of Penne Pasta Primavera, save as artifact, and return public URL.')">
+          <span class="material-symbols-outlined symbol">image</span>
+          Generate Dish Photo
+        </button>
+      </div>
+    </div>
+
+    <!-- Upcoming Week's Meal Plan (In-Memory) -->
+    <div class="panel-card">
+      <div class="panel-title">
+        <span class="material-symbols-outlined">restaurant_menu</span>
+        Upcoming Week Meal Plan
+      </div>
+      <div id="weekly-meal-plan-list">
+        <div class="meal-day"><div class="day-name">Monday</div><div class="meal-item" id="plan-mon">Herb Roasted Chicken & Veggies</div></div>
+        <div class="meal-day"><div class="day-name">Tuesday</div><div class="meal-item" id="plan-tue">Penne Pasta Primavera</div></div>
+        <div class="meal-day"><div class="day-name">Wednesday</div><div class="meal-item" id="plan-wed">Historic English Stew (1814)</div></div>
+        <div class="meal-day"><div class="day-name">Thursday</div><div class="meal-item" id="plan-thu">Garlic Olive Oil Pasta</div></div>
+        <div class="meal-day"><div class="day-name">Friday</div><div class="meal-item" id="plan-fri">Homemade Vegetable Soup</div></div>
+        <div class="meal-day"><div class="day-name">Saturday</div><div class="meal-item" id="plan-sat">Baked Herb Salmon & Rice</div></div>
+        <div class="meal-day"><div class="day-name">Sunday</div><div class="meal-item" id="plan-sun">Classic Roast & Potatoes</div></div>
+      </div>
+    </div>
+
+    <!-- Memory Items / Retrieved Shopping List -->
+    <div class="panel-card">
+      <div class="panel-title">
+        <span class="material-symbols-outlined">checklist</span>
+        Retrieved Shopping Items
+      </div>
+      <ul class="shopping-list" id="retrieved-shopping-items">
+        <li class="shopping-item"><span class="material-symbols-outlined" style="font-size:1rem;color:#d4a373;">check_box_outline_blank</span> Heavy Cream (1 pint)</li>
+        <li class="shopping-item"><span class="material-symbols-outlined" style="font-size:1rem;color:#d4a373;">check_box_outline_blank</span> Fresh Basil (1 bunch)</li>
+        <li class="shopping-item"><span class="material-symbols-outlined" style="font-size:1rem;color:#d4a373;">check_box_outline_blank</span> Parmesan Cheese (8 oz)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Main Chat Interface -->
+<div id="main-content">
+  <header class="chat-header">
+    <h2>Interactive Culinary Assistant</h2>
+    <div class="status-badge">
+      <div class="dot"></div> Agent Engine Connected
+    </div>
+  </header>
+
+  <div id="log"></div>
+
+  <form id="form">
+    <input id="input" placeholder="Ask about recipes, pantry items, shopping lists, or dietary restrictions..." autocomplete="off" autofocus>
+    <button class="send-btn" type="submit">
+      <span class="material-symbols-outlined" style="font-size:1.1rem;">send</span> Send
+    </button>
+  </form>
+</div>
+
+<script>
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+function bubble(who) {
+  const m = el("div", "msg " + who);
+  const b = el("div", "bubble");
+  m.appendChild(b); log.appendChild(m); log.scrollTop = log.scrollHeight;
+  return b;
+}
+
+function sendPrompt(text) {
+  input.value = text;
+  form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+}
+
+/* ----------------------------------------------------------------------------
+ * A2UI mini-renderer (v0.8 Basic Catalog subset).
+ * -------------------------------------------------------------------------- */
+function boundStr(v) {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v.literalString === "string") return v.literalString;
+  return "";
+}
+
+function childIds(props) {
+  const ids = [];
+  if (props && typeof props.child === "string") ids.push(props.child);
+  const ch = props && props.children;
+  if (ch && Array.isArray(ch.explicitList)) for (const c of ch.explicitList) if (typeof c === "string") ids.push(c);
+  return ids;
+}
+
+function iconName(n) { return String(n || "").replace(/([a-z0-9])([A-Z])/g, "$1_$2").replace(/\s+/g, "_").toLowerCase(); }
+
+function buildNode(id, comps, seen) {
+  if (!id || seen.has(id)) return null;
+  seen.add(id);
+  const spec = comps[id];
+  if (!spec || typeof spec !== "object") return null;
+  const type = Object.keys(spec)[0];
+  const props = spec[type] || {};
+  const kids = () => childIds(props).map(cid => buildNode(cid, comps, seen)).filter(Boolean);
+
+  switch (type) {
+    case "Card": {
+      const d = el("div", "a2card"); kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Column":
+    case "List": {
+      const horizontal = type === "List" && props.direction === "horizontal";
+      const d = el("div", horizontal ? "a2row" : "a2col"); kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Row": {
+      const d = el("div", "a2row" + (props.distribution === "spaceBetween" ? " between" : ""));
+      kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Text": {
+      const t = el("div", "a2text");
+      const hint = String(props.usageHint || "body").toLowerCase();
+      if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(hint)) t.classList.add("a2-" + hint);
+      else if (hint === "caption") t.classList.add("a2-caption");
+      t.textContent = boundStr(props.text);
+      return t;
+    }
+    case "Divider":
+      return el("hr", "a2divider");
+    case "Image": {
+      const src = boundStr(props.url || props.src);
+      if (!/^https?:\/\//i.test(src)) return null;
+      const img = el("img", "a2img"); img.src = src; img.alt = boundStr(props.alt) || ""; return img;
+    }
+    case "Icon": {
+      const s = el("span", "material-symbols-outlined"); s.textContent = iconName(boundStr(props.name) || props.name); return s;
+    }
+    default:
+      return null;
+  }
+}
+
+function renderSurface(messages, container) {
+  const comps = {};
+  const roots = [];
+  for (const m of messages) {
+    if (m.beginRendering && typeof m.beginRendering.root === "string") roots.push(m.beginRendering.root);
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.id && c.component) comps[c.id] = c.component;
+  }
+  let rootIds = roots.filter(r => comps[r]);
+  if (rootIds.length === 0) {
+    const referenced = new Set();
+    for (const id in comps) { const spec = comps[id]; childIds(spec[Object.keys(spec)[0]] || {}).forEach(c => referenced.add(c)); }
+    rootIds = Object.keys(comps).filter(id => !referenced.has(id));
+  }
+  let drew = false;
+  for (const rid of rootIds) { const node = buildNode(rid, comps, new Set()); if (node) { container.appendChild(node); drew = true; } }
+  return drew;
+}
+
+function flattenText(messages) {
+  const out = [];
+  for (const m of messages) {
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.component && c.component.Text) out.push(boundStr(c.component.Text.text));
+  }
+  return out.join("\n").trim();
+}
+
+function renderReply(b, parts) {
+  b.textContent = "";
+  const texts = parts.filter(p => p && (p.kind === "text" || (!p.kind && p.text))).map(p => p.text || "");
+  const a2ui = parts.filter(p => p && p.kind === "a2ui" && p.data).map(p => p.data);
+
+  const textStr = texts.join("\n").trim();
+  if (textStr) b.appendChild(el("div", null, textStr));
+
+  if (a2ui.length) {
+    b.classList.add("rich");
+    if (!renderSurface(a2ui, b)) b.appendChild(el("div", null, flattenText(a2ui) || "(no card content)"));
+  }
+  if (!b.childNodes.length) b.textContent = "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  bubble("user").textContent = text;
+  input.value = "";
+  const b = bubble("agent"); b.textContent = "…";
+  try {
+    const res = await fetch("/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
+    const raw = await res.text();
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error(`Server returned non-JSON (HTTP ${res.status}). ${raw.slice(0, 300)}`); }
+    renderReply(b, data.parts || []);
+  } catch (e) {
+    b.textContent = "Error: " + e.message;
+  }
+});
+
+// Welcome message on load
+window.addEventListener("DOMContentLoaded", () => {
+  const b = bubble("agent");
+  b.textContent = "Welcome to Smart Pantry & Recipe Concierge! I can help you plan next week's meals, manage your Firestore pantry stock, suggest 1814 historic recipes, and generate missing item shopping lists.";
+});
+</script>
+</body>
+</html>
